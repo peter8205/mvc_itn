@@ -15,7 +15,9 @@ abstract class Kontroler
     {
         if ($this->pohled)
         {
-            extract($this->data);
+            //extract($this->data);
+            extract($this->osetri($this->data));
+            extract($this->data, EXTR_PREFIX_ALL, "");
             require("pohledy/" . $this->pohled . ".phtml");
         }
     }
@@ -30,5 +32,23 @@ abstract class Kontroler
 
         /* Hlavní metoda controlleru */
     abstract function zpracuj($parametry);
+
+    private function osetri($x = null)
+    {
+        if (!isset($x))
+            return null;
+        elseif (is_string($x))
+            return htmlspecialchars($x, ENT_QUOTES);
+        elseif (is_array($x))
+        {
+            foreach($x as $k => $v)
+            {
+                $x[$k] = $this->osetri($v);
+            }
+            return $x;
+        }
+        else
+            return $x;
+    }
 
 }
