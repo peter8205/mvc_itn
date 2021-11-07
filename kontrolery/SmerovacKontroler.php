@@ -20,14 +20,26 @@ class SmerovacKontroler extends Kontroler
 		return $rozdelenaCesta;
 	}
 
-    public function zpracuj($parametry)
-    {
-		$naparsovanaURL = $this->parsujURL($parametry[0]);/* [0] => /clanek/nazev-clanku/dalsi-parametr */
-		$tridaKontroleru = $this->pomlckyDoVelbloudiNotace(array_shift($naparsovanaURL)) . 'Kontroler';
-		echo($tridaKontroleru); /*ClanekKontroler*/
-		
-		echo('<br />');
-		print_r($naparsovanaURL); /*Array ( [0] => nazev-clanku [1] => dalsi-parametr ) */
-    }
+	public function zpracuj($parametry)
+	{
+	    $naparsovanaURL = $this->parsujURL($parametry[0]);
 
+	    if (empty($naparsovanaURL[0]))
+	        $this->presmeruj('clanek/uvod');
+	    $tridaKontroleru = $this->pomlckyDoVelbloudiNotace(array_shift($naparsovanaURL)) . 'Kontroler';
+		
+		if (file_exists('kontrolery/' . $tridaKontroleru . '.php'))
+		        $this->kontroler = new $tridaKontroleru;
+		    else
+		        $this->presmeruj('chyba');
+
+		$this->kontroler->zpracuj($naparsovanaURL);
+
+	    $this->data['titulek'] = $this->kontroler->hlavicka['titulek'];
+	    $this->data['popis'] = $this->kontroler->hlavicka['popis'];
+	    $this->data['klicova_slova'] = $this->kontroler->hlavicka['klicova_slova'];
+
+	    // Nastavení hlavní šablony
+	    $this->pohled = 'rozlozeni';
+	}
 }

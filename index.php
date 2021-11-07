@@ -15,3 +15,4 @@ spl_autoload_register("autoloadFunkce");
 $smerovac = new SmerovacKontroler();
 $smerovac->zpracuj(array($_SERVER['REQUEST_URI']));
 //http://www.domena.cz/clanek/nazev-clanku
+$smerovac->vypisPohled();
