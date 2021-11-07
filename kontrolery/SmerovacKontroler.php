@@ -41,5 +41,6 @@ class SmerovacKontroler extends Kontroler
 
 	    // Nastavení hlavní šablony
 	    $this->pohled = 'rozlozeni';
+	    $this->data['zpravy'] = $this->vratZpravy();
 	}
 }
